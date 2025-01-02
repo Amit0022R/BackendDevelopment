@@ -5,6 +5,11 @@ function sum( a , b ){
 }
 console.log("Sum is: " + sum(91,9));
 
+function multiply( a , b ){
+    return a * b;
+}
+console.log("Multiply is: " + multiply(10,1));
+
 // use node index.js for run index.js file.
 // use npm run start to run index.js (go package.json file then go to "scripts" section and  add "start": "node index.js") 
 
