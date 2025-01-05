@@ -9,12 +9,12 @@ function calculateSum(n) {
     }
     return ans;
 }
-
 const app  = express();
 app.get("/" , function(req , res) {
-    const n = req.query.n;
+    const n = req.query.n; // input n
     const ans = calculateSum(n);
-    res.send(ans.toString());
+    res.send("Hi , your ans is: " +  ans.toString());
 })
 app.listen(3000); // http://localhost:3000/?n=100
+// everything after question mark is not counted in route
 
