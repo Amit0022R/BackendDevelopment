@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.6/axios.min.js"></script>
+    <title>AXIOS</title>
+</head>
+<body>
+      <b><i>LINKEDIn</i></b>
+      <div id="posts"></div>
+      <script>
+        async function getRecentPost() {
+            const response = await axios.get("https://jsonplaceholder.typicode.com/posts/1"); 
+            // automatically convert to json
+        
+        document.getElementById("posts").innerHTML = response.data.title;
+        // for whole data JSON.stringify(response.data));
+        } 
+        getRecentPost();
+      </script>
+</body>
+</html>
