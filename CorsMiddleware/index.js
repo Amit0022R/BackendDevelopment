@@ -6,8 +6,8 @@ const app = express();
 
 // in express if you want to send JSON data , you need to first parse the json data
 
-app.use(bodyParser.json());
-// app.use(express.json());
+// app.use(bodyParser.json());
+app.use(express.json());
 
 app.post("/sum" , function( req  , res) {
     console.log(req.body);
@@ -20,4 +20,4 @@ app.post("/sum" , function( req  , res) {
     })
 })
 
-app.listen(3000)
+app.listen(5000)
