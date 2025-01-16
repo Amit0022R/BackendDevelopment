@@ -52,8 +52,9 @@ app.post("/signin" , async ( req , res ) =>{
 
     if( user ) {
         const token = jwt.sign({
-          id : user._id
-        })
+// user._id is represented as object , if you try to encode object it becomes undefined so use tostring()   
+          id : user._id.toString()
+        } , JWT_SECRET )
         res.json({
             token
         });
@@ -66,13 +67,41 @@ app.post("/signin" , async ( req , res ) =>{
 });
 
 // user will hit this endpoint to create a todo in database. 
-app.post("/todo" , ( req , res ) => {
-
+app.post("/todo" , auth , ( req , res ) => {
+    const userId = req.userId;
+    const title = req.body.title;
+    TodoModel.create({
+        title ,
+        userId
+    })
+    res.json({
+        userId : userId
+    })
 });
 
-app.get("/todos" , ( req , res ) => {
-
+app.get("/todos" , auth , async ( req , res ) => {
+    // req.userId
+    const userId = req.userId;
+    const todos = await TodoModel.find({
+        userId : userId
+    })
+    res.json({
+        todos
+    })
 });
+
+function auth( req , res , next ) {
+    const token = req.headers.token;
+    const decodedData = jwt.verify( token , JWT_SECRET );
+    if( decodedData ) {
+        req.userId = decodedData.id;
+        next();
+    } else {
+        res.status(403).json({
+            message : "incorrect credentials"
+        })
+    }
+}
 
 app.listen(3000);
 
