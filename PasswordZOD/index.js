@@ -11,6 +11,7 @@ const express = require("express");
 const { UserModel , TodoModel } = require("./db"); // import
 const { auth, JWT_SECRET } = require("./auth");
 const jwt = require("jsonwebtoken");
+const { z } = require("zod");
 
 const mongoose = require("mongoose")
 mongoose.connect("mongodb+srv://amitt:BwMOBe31lgZs2sbC@cluster0.t6n5j.mongodb.net/todo-amit-17jan")
@@ -19,16 +20,49 @@ const app = express();
 app.use(express.json()); // parsing body
 
 app.post("/signup" , async ( req , res ) => {
+    // use zod library to give schema first
+    const requiredBody = z.object({
+        email : z.string().min(3).max(100).email() ,
+        name : z.string().min(3).max(100) ,
+        password : z.string().min(3).max(30) 
+    })
 
+    // const parsedData = requiredBody.parse(req.body);
+    const parsedDataWithSuccess = requiredBody.safeParse(req.body)
+
+    /* parsedDataWithSuccess returns you a object like this
+        {
+            success : true | false,
+            data : {},
+            errors : []
+        }
+    */
+
+    if( !parsedDataWithSuccess.success ) {
+        res.json({
+            message : "Incorrect Format" ,
+            error : parsedDataWithSuccess.error
+        })
+        return;
+    }
+
+    // input validation
     const email = req.body.email; // string
     const password = req.body.password; // string
     const name = req.body.name; // string
     // const { email, password, name } = req.body;
 
-    let errorThrown = false;
+    // if( typeof email !== "String" || email.length < 5 || !email.includes("@") ) {
+    //    res.json({
+    //     message : "Email incorrect"
+    //    })
+    //     return 
+    // }
+
+    // For input validation use ZOD
+
         const hashedPassword = await bcrypt.hash( password , 5 );
-        // console.log(hashedPassword);
-        
+    
         // Schema ->> email , password , name
         await UserModel.create({
             email : email , 
